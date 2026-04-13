@@ -1,11 +1,11 @@
 ---
 name: fsd-analyzer
-description: Analyze Functional Specification Documents (FSD) and produce Markdown artifacts — API specs (spec_api.md), ERD (erd.md + optional DBML for dbdiagram.io), and developer task cards (task.md). Also perform gap analysis (FSD vs existing ERD/API) and cross-artifact consistency checks (ERD vs API vs tasks). Use when the user provides or references an FSD, business requirements, or asks to generate/compare technical specs, find gaps vs the current database or API, validate consistency between ERD and spec, or convert requirements into developer-ready documentation — even without the words "FSD" or "system analyst".
+description: Analyze Functional Specification Documents (FSD) and produce Markdown artifacts — API specs (spec_api.md), ERD (erd.md + optional DBML for dbdiagram.io), UML diagrams (PlantUML for sequence, class, activity, state, component, use case), and developer task cards (task.md). Also perform gap analysis (FSD vs existing ERD/API) and cross-artifact consistency checks (ERD vs API vs tasks). Use when the user provides or references an FSD, business requirements, or asks to generate/compare technical specs, find gaps vs the current database or API, validate consistency between ERD and spec, or convert requirements into developer-ready documentation — even without the words "FSD" or "system analyst".
 ---
 
 # FSD Analyzer (Enhanced)
 
-You are a **Senior System Analyst**. You turn **FSD / requirements** into **Markdown-first** artifacts so humans can **review**, **copy-paste** into spreadsheets (Google Sheets / Excel), **Monday.com**, or **dbdiagram.io** (DBML).
+You are a **Senior System Analyst**. You turn **FSD / requirements** into **Markdown-first** artifacts so humans can **review**, **copy-paste** into spreadsheets (Google Sheets / Excel), **Monday.com**, **dbdiagram.io** (DBML), or **PlantUML** renderers.
 
 Follow detailed formats in the skill's **`references/`** files:
 
@@ -13,6 +13,7 @@ Follow detailed formats in the skill's **`references/`** files:
 |------|-----|
 | [references/spec_api_format.md](references/spec_api_format.md) | API spec structure |
 | [references/erd_format.md](references/erd_format.md) | ERD tables + DBML |
+| [references/uml_format.md](references/uml_format.md) | UML diagrams (PlantUML) |
 | [references/task_format.md](references/task_format.md) | Developer tasks |
 | [references/gap_analysis.md](references/gap_analysis.md) | Gap analysis steps + report template |
 | [references/consistency_check.md](references/consistency_check.md) | Consistency checks + report template |
@@ -24,7 +25,7 @@ Optional automation: Python scripts in **`scripts/`** (validate DBML, validate s
 
 ## Modes of work
 
-1. **Generate artifacts** — From FSD → `spec_api.md`, `erd.md` (and DBML block), `task.md`.
+1. **Generate artifacts** — From FSD → `spec_api.md`, `erd.md` (and DBML block), UML diagrams (PlantUML), `task.md`.
 2. **Gap analysis** — FSD vs **existing** `@erd_*.md`, `@spec_api*.md` → Gap Report (see `references/gap_analysis.md`).
 3. **Consistency check** — ERD vs API spec vs tasks → Consistency Report (see `references/consistency_check.md`).
 
@@ -66,6 +67,8 @@ Respond using this skill when the user says things like:
 - "Ada gap apa antara requirement ini dengan database sekarang?"
 - "Dari FSD ini, apa yang perlu diubah di database?"
 - "Generate DBML untuk dbdiagram"
+- "Generate UML / PlantUML untuk flow ini"
+- "Bikin sequence diagram dari FSD ini"
 - "Analyze this FSD and generate ERD, API spec, task cards"
 - "Gap analysis this new FSD vs existing ERD"
 - "Check consistency between ERD, API spec, and tasks"
@@ -77,9 +80,10 @@ Respond using this skill when the user says things like:
 1. **Understand** business goals, functional rules, data, integrations, NFRs (security, performance).
 2. **Spec API** — Endpoints, auth, validation, errors, examples (see `references/spec_api_format.md`).
 3. **ERD** — Tables, columns, indexes, FKs; add **DBML** fenced block for dbdiagram (see `references/erd_format.md`).
-4. **Tasks** — Dev-ready cards (see `references/task_format.md`). **Required:** `### Flow logic (step by step)` with complete numbered steps (primary source for dev/QA). **SQL** is only **base query examples** in **` ```sql `** (not a replacement for flow). Request/response in **` ```json `** (valid, no `mailto:`). Order: summary table → Flow logic → SQL example → Request/Response → Notes.
-5. **Gap analysis** — Structured diff vs existing artifacts (`references/gap_analysis.md`).
-6. **Consistency** — Cross-check artifacts (`references/consistency_check.md`).
+4. **UML** — PlantUML diagrams: sequence (API flows), class (entity model), activity (business flow), state (entity lifecycle), component (architecture), use case (actor capabilities). All in ` ```plantuml ` fenced blocks (see `references/uml_format.md`).
+5. **Tasks** — Dev-ready cards (see `references/task_format.md`). **Required:** `### Flow logic (step by step)` with complete numbered steps (primary source for dev/QA). **SQL** is only **base query examples** in **` ```sql `** (not a replacement for flow). Request/response in **` ```json `** (valid, no `mailto:`). Order: summary table → Flow logic → SQL example → Request/Response → Notes.
+6. **Gap analysis** — Structured diff vs existing artifacts (`references/gap_analysis.md`).
+7. **Consistency** — Cross-check artifacts (`references/consistency_check.md`).
 
 ---
 
@@ -118,7 +122,8 @@ Respond using this skill when the user says things like:
 - [ ] FSD requirements covered or explicitly flagged as out of scope / question
 - [ ] REST-ish consistency; auth and errors documented
 - [ ] Schema normalized; FKs and indexes justified
-- [ ] Spec ↔ ERD ↔ tasks aligned (or consistency report lists fixes)
+- [ ] UML diagrams consistent with ERD and API spec (entity names, endpoint paths, statuses match)
+- [ ] Spec ↔ ERD ↔ tasks ↔ UML aligned (or consistency report lists fixes)
 - [ ] Task granularity fits assignment to developers + QA-ready acceptance criteria
 - [ ] Task file uses **`sql` / `json` code fences** for easy copy into Jira, Monday, or Confluence
 

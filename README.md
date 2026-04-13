@@ -1,6 +1,6 @@
 # FSD Analyzer
 
-Transform **Functional Specification Documents (FSD)** into **Markdown-first** technical artifacts — API specs, ERD schemas, and developer task cards — using AI-powered coding assistants like Cursor, Claude Code, OpenCode, or any agent that supports custom skills.
+Transform **Functional Specification Documents (FSD)** into **Markdown-first** technical artifacts — API specs, ERD schemas, UML diagrams, and developer task cards — using AI-powered coding assistants like Cursor, Claude Code, OpenCode, or any agent that supports custom skills.
 
 ## What It Does
 
@@ -10,17 +10,19 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 |--------|---------|
 | **spec_api.md** | REST API contract (endpoints, auth, validation, errors, examples) |
 | **erd.md** + **DBML** | Database schema + paste-ready for [dbdiagram.io](https://dbdiagram.io) |
+| **UML diagrams** | PlantUML — sequence, class, activity, state, component, use case diagrams |
 | **task.md** | Developer task cards (copy to Monday, Jira, Confluence) |
 | **Gap Report** | Structured diff: FSD vs existing ERD/API |
 | **Consistency Report** | Cross-check: ERD ↔ API spec ↔ tasks |
 
 ## Features
 
-- **Generate artifacts** — From FSD to full API spec, ERD, and task cards
+- **Generate artifacts** — From FSD to full API spec, ERD, UML diagrams, and task cards
+- **UML diagrams** — PlantUML code blocks for [PlantUML](https://plantuml.com) / [PlantText](https://www.planttext.com/): sequence, class, activity, state, component, and use case diagrams
 - **Gap analysis** — Compare new FSD against existing database schema and API specs
 - **Consistency checks** — Validate alignment across ERD, API spec, and task cards
 - **Master files** — Rolling `MASTER_ERD.md` and `MASTER_SPEC_API.md` for incremental FSD-by-section work
-- **Copy-paste friendly** — Markdown tables, fenced `sql`/`json` blocks ready for spreadsheets, Jira, or Monday
+- **Copy-paste friendly** — Markdown tables, fenced `sql`/`json`/`plantuml` blocks ready for spreadsheets, Jira, Monday, dbdiagram.io, or PlantUML renderers
 - **Optional Python scripts** — Validate DBML, check spec structure, extract entity hints, compare artifacts (no external dependencies)
 - **Optional Streamlit UI** — Browser-based interface for the validation scripts
 
@@ -57,6 +59,7 @@ fsd-analyzer/
 ├── references/                 # Format templates & procedures
 │   ├── spec_api_format.md      # API spec structure
 │   ├── erd_format.md           # ERD tables + DBML format
+│   ├── uml_format.md           # UML diagrams (PlantUML)
 │   ├── task_format.md          # Developer task card format
 │   ├── gap_analysis.md         # Gap analysis procedure + report template
 │   ├── consistency_check.md    # Consistency check procedure + report template
@@ -82,7 +85,21 @@ fsd-analyzer/
 ### Generate Artifacts from FSD
 
 ```
-Here is our FSD for the user management module. Generate spec_api, erd, and task cards.
+Here is our FSD for the user management module. Generate spec_api, erd, UML diagrams, and task cards.
+@fsd_user_management.md
+```
+
+### Generate UML Diagrams
+
+```
+Generate PlantUML sequence and class diagrams from this FSD.
+@fsd_user_management.md
+```
+
+Or specifically:
+
+```
+Bikin sequence diagram untuk endpoint user registration dan login
 @fsd_user_management.md
 ```
 
@@ -160,7 +177,8 @@ Every output is checked against:
 - All FSD requirements covered or explicitly flagged
 - REST consistency with auth and error documentation
 - Normalized schema with justified FKs and indexes
-- Cross-artifact alignment (spec ↔ ERD ↔ tasks)
+- Cross-artifact alignment (spec ↔ ERD ↔ tasks ↔ UML)
+- UML diagram entity names, endpoint paths, and statuses consistent with ERD and spec
 - Developer-ready task granularity with QA acceptance criteria
 - `sql`/`json` code fences for easy copy-paste to Jira, Monday, or Confluence
 
