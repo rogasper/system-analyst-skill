@@ -1,0 +1,47 @@
+{
+  "skill_name": "fsd-analyzer",
+  "version": "2",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here is the Functional Specification Document for a User Management System. Please analyze it and generate the complete technical artifacts including spec_api.md, erd.md (with a DBML block for dbdiagram.io), and task.md.",
+      "expected_output": "Markdown artifacts: spec_api.md with endpoints and flow logic; erd.md with tables/columns/indexes plus a ```dbml``` block; task.md with dev task cards and acceptance criteria. Formats should align with references/spec_api_format.md, references/erd_format.md, references/task_format.md.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 2,
+      "prompt": "I need technical specifications from this FSD. Generate the API spec, ERD, and developer tasks.",
+      "expected_output": "Comprehensive spec_api, erd, and task markdown grounded in the FSD; consistent naming across artifacts.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 3,
+      "prompt": "Compare this new FSD with our existing ERD and API spec. Produce a Gap Report.",
+      "expected_output": "Structured Gap Report per references/gap_analysis.md: database changes table, missing endpoints, recommendations. Uses tagged existing files when provided.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 4,
+      "prompt": "Check consistency between the ERD, API spec, and task cards. List errors and warnings.",
+      "expected_output": "Consistency Report per references/consistency_check.md with severity columns and fix suggestions.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "We are still discussing scope with the BA. List open questions only — do not write full spec yet.",
+      "expected_output": "QUESTION_FOR_BA / ambiguity list; no premature full spec_api unless user asks to assume.",
+      "files": ["evals/sample_fsd.md"]
+    }
+  ],
+  "scripts_smoke": [
+    {
+      "description": "Extract entities from sample FSD",
+      "command": "python scripts/extract_entities.py evals/sample_fsd.md"
+    },
+    {
+      "description": "Validate sample spec if path provided",
+      "command": "python scripts/validate_spec.py evals/sample_fsd.md",
+      "note": "sample_fsd is FSD not spec — expect WARNs; use a real spec_api.md for green OK"
+    }
+  ]
+}

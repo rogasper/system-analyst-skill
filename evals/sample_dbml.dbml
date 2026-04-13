@@ -1,0 +1,12 @@
+// Minimal valid DBML for script smoke tests
+Table users {
+  id uuid [pk]
+  email varchar(255) [not null, unique]
+}
+
+Table login_history {
+  id uuid [pk]
+  user_id uuid [not null]
+}
+
+Ref: login_history.user_id > users.id
