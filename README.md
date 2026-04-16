@@ -1,6 +1,6 @@
 # FSD Analyzer
 
-Transform **Functional Specification Documents (FSD)** into **Markdown-first** technical artifacts — API specs, ERD schemas, UML diagrams, and developer task cards — using AI-powered coding assistants like Cursor, Claude Code, OpenCode, or any agent that supports custom skills.
+Transform **Functional Specification Documents (FSD)** into **Markdown-first** technical artifacts — API specs, ERD schemas, UML diagrams, developer task cards, and HTML Gantt timeline charts — using AI-powered coding assistants like Cursor, Claude Code, OpenCode, or any agent that supports custom skills.
 
 ## What It Does
 
@@ -11,9 +11,14 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 | **spec_api.md** | REST API contract (endpoints, auth, validation, errors, examples) |
 | **erd.md** + **DBML** | Database schema + paste-ready for [dbdiagram.io](https://dbdiagram.io) |
 | **UML diagrams** | PlantUML — sequence, class, activity, state, component, use case diagrams |
-| **task.md** | Developer task cards (copy to Monday, Jira, Confluence) |
-| **Gap Report** | Structured diff: FSD vs existing ERD/API |
+| **task.md** | Developer task cards with Story Points, dependencies, critical path (copy to Monday, Jira, Confluence) |
+| **task_fe.md** | Frontend task cards (component breakdown, API integration, UI states, acceptance criteria) |
+| **timeline.html** | Self-contained HTML Gantt chart with Story Points, dependencies, critical path, developer utilization |
+| **Gap Report** | Structured diff: FSD vs existing ERD/API + migration plan |
 | **Consistency Report** | Cross-check: ERD ↔ API spec ↔ tasks |
+| **Discovery Questions** | Structured QUESTION_FOR_BA, ASSUMPTION, CONFLICT list for ambiguous FSDs |
+| **Auth & Security Spec** | Auth patterns, role-permission matrix, security requirements |
+| **Migration Plan** | Zero-downtime migration strategy, rollback plan, deployment sequence |
 
 ## Features
 
@@ -21,7 +26,14 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 - **UML diagrams** — PlantUML code blocks for [PlantUML](https://plantuml.com) / [PlantText](https://www.planttext.com/): sequence, class, activity, state, component, and use case diagrams
 - **Gap analysis** — Compare new FSD against existing database schema and API specs
 - **Consistency checks** — Validate alignment across ERD, API spec, and task cards
+- **Timeline estimation** — Story Points (1 SP = 4 hours), developer assignment, dependency tracking, critical path analysis, HTML Gantt chart visualization
+- **Discovery mode** — Structured questions for ambiguous FSDs before generating specs
+- **Auth & security** — JWT patterns, role-permission matrix, brute force protection, data protection
+- **Error catalog** — Standardized error envelope, error codes, HTTP status mapping
+- **Frontend tasks** — FE-specific cards with component breakdown, API integration, UI states
+- **Migration planning** — Zero-downtime strategy, rollback plan, deployment sequence
 - **Master files** — Rolling `MASTER_ERD.md` and `MASTER_SPEC_API.md` for incremental FSD-by-section work
+- **Project context** — Template for tech stack, conventions, environments
 - **Copy-paste friendly** — Markdown tables, fenced `sql`/`json`/`plantuml` blocks ready for spreadsheets, Jira, Monday, dbdiagram.io, or PlantUML renderers
 - **Optional Python scripts** — Validate DBML, check spec structure, extract entity hints, compare artifacts (no external dependencies)
 - **Optional Streamlit UI** — Browser-based interface for the validation scripts
@@ -32,74 +44,54 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 
 Point your AI assistant to this repo as a skill. For example in **OpenCode**, add to your project's `.agents/skills/` directory or reference the `SKILL.md` directly.
 
-### 2. In your chat, @-reference your FSD and existing artifacts
+### 2. Create project context (recommended, one-time)
+
+Copy `references/project_context_template.md` to your project root as `project_context.md` and fill in your project details (tech stack, naming conventions, environments, auth patterns).
+
+### 3. In your chat, @-reference your FSD and existing artifacts
+
+```
+@project_context.md @fsd_user_management.md — generate spec_api, erd, and tasks
+```
+
+---
+
+## Usage Examples
+
+### Discovery / Discussion Mode
+
+When the FSD is still ambiguous or incomplete:
+
+```
+FSD ini masih draft. List semua pertanyaan dan asumsi — jangan buat spec dulu.
+@fsd_draft.md
+```
+
+### Generate Artifacts from FSD
 
 ```
 Analisis FSD ini dan generate ERD, API spec, task cards
 @fsd_user_management.md
 ```
 
-Or with existing artifacts:
+### Generate UML Diagrams Only
 
 ```
-Gap analysis: @fsd_new_feature.md vs @erd_now.md @spec_api.md
-```
-
-Or using master files for incremental work:
-
-```
-@MASTER_ERD.md @MASTER_SPEC_API.md @fsd_section_3.md — merge changes into master
-```
-
-## Project Structure
-
-```
-fsd-analyzer/
-├── SKILL.md                    # Agent instructions (main skill definition)
-├── references/                 # Format templates & procedures
-│   ├── spec_api_format.md      # API spec structure
-│   ├── erd_format.md           # ERD tables + DBML format
-│   ├── uml_format.md           # UML diagrams (PlantUML)
-│   ├── task_format.md          # Developer task card format
-│   ├── gap_analysis.md         # Gap analysis procedure + report template
-│   ├── consistency_check.md    # Consistency check procedure + report template
-│   └── master_artifacts.md     # MASTER_ERD + MASTER_SPEC workflow
-├── scripts/                    # Optional local validation (Python, stdlib only)
-│   ├── validate_erd.py         # DBML table + ref validation
-│   ├── validate_spec.py        # Spec markdown structure heuristics
-│   ├── extract_entities.py     # Extract table/entity hints from FSD
-│   └── compare_artifacts.py    # Compare FSD table mentions vs ERD tables
-├── evals/                      # Evaluation prompts & sample data
-│   ├── evals.json              # Test prompts and expected outputs
-│   ├── sample_fsd.md           # Sample Functional Specification Document
-│   └── sample_dbml.dbml        # Sample DBML for script smoke tests
-├── optional_web/               # Streamlit UI for running scripts
-│   ├── app.py
-│   ├── requirements.txt
-│   └── .env.example
-└── assets/templates/           # Project-specific snippet placeholders
-```
-
-## Usage Examples
-
-### Generate Artifacts from FSD
-
-```
-Here is our FSD for the user management module. Generate spec_api, erd, UML diagrams, and task cards.
+Generate PlantUML sequence and class diagrams from this FSD. Only UML, no spec.
 @fsd_user_management.md
 ```
 
-### Generate UML Diagrams
+### Document Auth & Security
 
 ```
-Generate PlantUML sequence and class diagrams from this FSD.
+Dokumentasikan auth flow dan role matrix dari FSD ini
 @fsd_user_management.md
 ```
 
-Or specifically:
+### Frontend Task Cards
 
 ```
-Bikin sequence diagram untuk endpoint user registration dan login
+Generate frontend task cards from this FSD. Include component breakdown, API integration, and acceptance criteria.
 @fsd_user_management.md
 ```
 
@@ -117,12 +109,124 @@ Check consistency between the ERD, API spec, and task cards. List errors and war
 @erd.md @spec_api.md @task.md
 ```
 
-### Discussion Mode
+### Development Timeline with Gantt Chart
+
+Assign tasks to developers and generate a visual timeline:
 
 ```
-We're still scoping this feature with the BA. List open questions — don't write full spec yet.
-@fsd_draft.md
+Generate development timeline with Gantt chart from these task cards.
+Team: Andi (Senior), Budi (Mid), Citra (Junior)
+@task_user_management.md
 ```
+
+Or directly from FSD:
+
+```
+Analisis FSD ini, generate task cards dengan story points, lalu buat timeline HTML dengan Gantt chart.
+Assign: Andi (Senior), Budi (Mid), Citra (Junior)
+@fsd_user_management.md
+```
+
+This generates:
+- Task cards with **Story Points** (1 SP = 4 hours)
+- **Dependency tracking** (Depends On / Blocks)
+- **Critical path** identification
+- **Developer utilization** analysis (no idle devs, no overload)
+- **`timeline_<feature>.html`** — open in browser for interactive Gantt chart
+
+### Using Master Files for Incremental Work
+
+```
+@MASTER_ERD.md @MASTER_SPEC_API.md @fsd_section_3.md — merge changes into master
+```
+
+---
+
+## Story Points
+
+| SP | Hours | Criteria |
+|----|-------|----------|
+| 1 SP | 4h | Single simple CRUD, no dependency |
+| 2 SP | 8h | 1 endpoint + medium logic, or standard FE page |
+| 3 SP | 12h | Multi-endpoint, medium logic, light integration |
+| 5 SP | 20h | Full feature, multi-table, approval flow |
+| 8 SP | 32h | New module, third-party integration, complex |
+| 13 SP | 52h | Epic: cross-module, large migration, architecture |
+
+**SP per Sprint (2 weeks):** Senior ~15 SP, Mid ~10 SP, Junior ~7 SP
+
+---
+
+## Project Structure
+
+```
+fsd-analyzer/
+├── SKILL.md                         # Agent instructions (main skill definition)
+├── references/                      # Format templates & procedures
+│   ├── spec_api_format.md           # API spec structure
+│   ├── erd_format.md                # ERD tables + DBML format
+│   ├── uml_format.md                # UML diagrams (PlantUML)
+│   ├── task_format.md               # Developer task cards + Story Points + dependencies
+│   ├── gap_analysis.md              # Gap analysis procedure + report template
+│   ├── consistency_check.md         # Consistency check procedure + report template
+│   ├── master_artifacts.md          # MASTER_ERD + MASTER_SPEC workflow
+│   ├── api_conventions.md           # API standards (pagination, naming, versioning, sorting)
+│   ├── auth_security.md             # Auth patterns, role-permission matrix, security
+│   ├── error_catalog.md             # Error envelope, error codes, HTTP status mapping
+│   ├── discovery_questions.md       # Discovery mode: structured questions for ambiguous FSD
+│   ├── frontend_task_format.md      # Frontend task cards (components, API integration, UI states)
+│   ├── migration_strategy.md        # DB migration plan (zero-downtime, rollback, deployment)
+│   ├── project_context_template.md  # Project context template (tech stack, conventions)
+│   └── timeline_estimation.md       # Timeline + HTML Gantt + SP + dependency + critical path
+├── scripts/                         # Optional local validation (Python, stdlib only)
+│   ├── validate_erd.py              # DBML table + ref validation
+│   ├── validate_spec.py             # Spec markdown structure heuristics
+│   ├── extract_entities.py          # Extract table/entity hints from FSD
+│   └── compare_artifacts.py         # Compare FSD table mentions vs ERD tables
+├── evals/                           # Evaluation prompts & sample data
+│   ├── evals.json                   # Test prompts and expected outputs (11 scenarios)
+│   ├── sample_fsd.md                # Sample Functional Specification Document
+│   └── sample_dbml.dbml             # Sample DBML for script smoke tests
+├── optional_web/                    # Streamlit UI for running scripts
+│   ├── app.py
+│   ├── requirements.txt
+│   └── .env.example
+└── assets/templates/                # Project-specific snippet placeholders
+```
+
+---
+
+## Workflow Overview
+
+```mermaid
+flowchart TD
+    FSD[FSD / Requirements] --> DISC{Clear enough?}
+    DISC -->|No| QUESTIONS[Discovery Questions<br/>QUESTION_FOR_BA / ASSUMPTION]
+    QUESTIONS --> DISC
+    DISC -->|Yes| SPEC[Spec API]
+    SPEC --> ERD[ERD + DBML]
+    ERD --> UML[UML Diagrams]
+    SPEC --> TASKS[Task Cards<br/>SP + Dependencies]
+    TASKS --> FE_TASKS[FE Task Cards]
+    TASKS --> TIMELINE[Timeline HTML<br/>Gantt Chart]
+    ERD --> GAP[Gap Analysis<br/>vs existing artifacts]
+    GAP --> MIGRATION[Migration Plan]
+    SPEC --> CONSISTENCY[Consistency Check]
+```
+
+### Typical SA Workflow
+
+1. **Discovery** — List questions, assumptions (don't generate specs yet)
+2. **Spec API** — Define endpoints, auth, validation, errors
+3. **ERD** — Design tables, columns, indexes, relationships + DBML
+4. **UML** — Generate PlantUML diagrams (sequence, class, activity, etc.)
+5. **Tasks** — Create task cards with Story Points and dependencies
+6. **FE Tasks** — Frontend-specific cards (if applicable)
+7. **Timeline** — Assign developers, generate HTML Gantt chart
+8. **Gap Analysis** — Compare against existing system (if applicable)
+9. **Consistency Check** — Validate all artifacts aligned
+
+---
 
 ## Running the Scripts
 
@@ -170,17 +274,31 @@ For projects where you work **FSD-by-section** (common in large systems):
 
 See [references/master_artifacts.md](references/master_artifacts.md) for the full workflow.
 
+## Workflow: Project Context
+
+Create `project_context.md` once per project so the agent has consistent conventions:
+
+1. Copy template from `references/project_context_template.md` to project root
+2. Fill in tech stack, naming conventions, environments, auth patterns
+3. `@`-reference it in every prompt alongside FSD
+
 ## Quality Gates
 
 Every output is checked against:
 
 - All FSD requirements covered or explicitly flagged
 - REST consistency with auth and error documentation
+- API conventions followed (pagination, naming, versioning)
+- Error codes follow standard catalog
+- Auth pattern and role-permission matrix documented
 - Normalized schema with justified FKs and indexes
 - Cross-artifact alignment (spec ↔ ERD ↔ tasks ↔ UML)
 - UML diagram entity names, endpoint paths, and statuses consistent with ERD and spec
 - Developer-ready task granularity with QA acceptance criteria
-- `sql`/`json` code fences for easy copy-paste to Jira, Monday, or Confluence
+- All tasks have Story Points and dependency fields
+- Timeline HTML with balanced developer utilization
+- Critical path identified and risks flagged
+- `sql`/`json`/`plantuml` code fences for easy copy-paste
 
 ## Compatible AI Assistants
 

@@ -1,23 +1,23 @@
 {
   "skill_name": "fsd-analyzer",
-  "version": "2",
+  "version": "3",
   "evals": [
     {
       "id": 1,
       "prompt": "Here is the Functional Specification Document for a User Management System. Please analyze it and generate the complete technical artifacts including spec_api.md, erd.md (with a DBML block for dbdiagram.io), and task.md.",
-      "expected_output": "Markdown artifacts: spec_api.md with endpoints and flow logic; erd.md with tables/columns/indexes plus a ```dbml``` block; task.md with dev task cards and acceptance criteria. Formats should align with references/spec_api_format.md, references/erd_format.md, references/task_format.md.",
+      "expected_output": "Markdown artifacts: spec_api.md with endpoints and flow logic; erd.md with tables/columns/indexes plus a ```dbml``` block; task.md with dev task cards, story points, dependency fields, and acceptance criteria. Formats should align with references/spec_api_format.md, references/erd_format.md, references/task_format.md. API spec should follow references/api_conventions.md and references/error_catalog.md.",
       "files": ["evals/sample_fsd.md"]
     },
     {
       "id": 2,
       "prompt": "I need technical specifications from this FSD. Generate the API spec, ERD, and developer tasks.",
-      "expected_output": "Comprehensive spec_api, erd, and task markdown grounded in the FSD; consistent naming across artifacts.",
+      "expected_output": "Comprehensive spec_api, erd, and task markdown grounded in the FSD; consistent naming across artifacts. Tasks include story points, dependency fields (Depends On, Blocks), and critical path flags.",
       "files": ["evals/sample_fsd.md"]
     },
     {
       "id": 3,
       "prompt": "Compare this new FSD with our existing ERD and API spec. Produce a Gap Report.",
-      "expected_output": "Structured Gap Report per references/gap_analysis.md: database changes table, missing endpoints, recommendations. Uses tagged existing files when provided.",
+      "expected_output": "Structured Gap Report per references/gap_analysis.md: database changes table, missing endpoints, recommendations. Uses tagged existing files when provided. Should include migration plan outline per references/migration_strategy.md.",
       "files": ["evals/sample_fsd.md"]
     },
     {
@@ -29,7 +29,43 @@
     {
       "id": 5,
       "prompt": "We are still discussing scope with the BA. List open questions only — do not write full spec yet.",
-      "expected_output": "QUESTION_FOR_BA / ambiguity list; no premature full spec_api unless user asks to assume.",
+      "expected_output": "QUESTION_FOR_BA / ASSUMPTION / CONFLICT / DECISION_NEEDED list per references/discovery_questions.md; no premature full spec_api unless user asks to assume.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 6,
+      "prompt": "Generate PlantUML sequence and class diagrams from this FSD. Only UML, no spec or ERD.",
+      "expected_output": "PlantUML diagrams only in ```plantuml``` fenced blocks per references/uml_format.md: sequence diagram for API flows, class diagram for entity model. No spec_api or erd output. Entity names consistent with FSD data entities section.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 7,
+      "prompt": "FSD ini masih draft dan banyak yang belum jelas. List semua pertanyaan dan asumsi — jangan buat spec dulu.",
+      "expected_output": "Structured question list per references/discovery_questions.md: QUESTION_FOR_BA table, ASSUMPTION table with reasons, CONFLICT if any, DECISION_NEEDED with options and recommendations. All in Indonesian or bilingual. No spec_api/erd/task generated.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 8,
+      "prompt": "Dari FSD ini, dokumentasikan auth flow, role-permission matrix, dan security requirements.",
+      "expected_output": "Auth & security documentation per references/auth_security.md: auth pattern selection, JWT token spec, role-permission matrix table, brute force protection rules, password policy, rate limiting, data protection rules. Error codes for auth failures per references/error_catalog.md.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 9,
+      "prompt": "Generate frontend task cards from this FSD. Include component breakdown, API integration, and acceptance criteria.",
+      "expected_output": "FE task cards per references/frontend_task_format.md: screen/page identification, component breakdown table, API integration table (action, method, endpoint, trigger), state management table, UI states (loading, empty, error, success), acceptance criteria checklist. Each task has story points.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 10,
+      "prompt": "Generate development timeline with Gantt chart from these task cards. Assign to 3 developers (1 senior, 1 mid, 1 junior) and estimate story points.\n\n@task_user_management.md",
+      "expected_output": "Timeline estimation per references/timeline_estimation.md: estimation summary (total SP, hours, sprints, weeks), sprint breakdown with task assignment, critical path identification, developer utilization bars, auto-detected risks/warnings. Self-contained HTML file (timeline_user_management.html) with interactive Gantt chart, color-coded by developer, dependency visualization. 1 SP = 4 hours.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Tolong buat migration plan untuk perubahan database yang ditemukan dari gap analysis FSD ini vs existing ERD.",
+      "expected_output": "Migration plan per references/migration_strategy.md: severity classification per change (safe/moderate/dangerous), zero-downtime phase approach, data migration scripts with SQL, rollback plan with triggers, deployment sequence with owners and verification steps. Error codes for auth failures per references/error_catalog.md.",
       "files": ["evals/sample_fsd.md"]
     }
   ],
@@ -42,6 +78,10 @@
       "description": "Validate sample spec if path provided",
       "command": "python scripts/validate_spec.py evals/sample_fsd.md",
       "note": "sample_fsd is FSD not spec — expect WARNs; use a real spec_api.md for green OK"
+    },
+    {
+      "description": "Validate sample DBML",
+      "command": "python scripts/validate_erd.py evals/sample_dbml.dbml"
     }
   ]
 }
