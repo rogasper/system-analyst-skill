@@ -1,5 +1,6 @@
 ---
 name: fsd-analyzer
+version: 1.1.0
 description: Analyze Functional Specification Documents (FSD) and produce Markdown artifacts — API specs (spec_api.md), ERD (erd.md + optional DBML for dbdiagram.io), UML diagrams (PlantUML for sequence, class, activity, state, component, use case), developer task cards (task.md) with Story Points, HTML Gantt timeline charts, and Requirement Traceability Matrix (RTM.md) tracing business requirements to design solutions and test cases. Also perform gap analysis (FSD vs existing ERD/API), cross-artifact consistency checks (ERD vs API vs tasks), and development timeline estimation with dependency tracking and critical path analysis. Use when the user provides or references an FSD, business requirements, or asks to generate/compare technical specs, find gaps vs the current database or API, validate consistency between ERD and spec, convert requirements into developer-ready documentation, estimate development timeline, assign tasks to developers, or build a traceability matrix — even without the words "FSD" or "system analyst".
 ---
 
