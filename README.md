@@ -14,7 +14,8 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 | **task.md** | Developer task cards with Story Points, dependencies, critical path (copy to Monday, Jira, Confluence) |
 | **task_fe.md** | Frontend task cards (component breakdown, API integration, UI states, acceptance criteria) |
 | **timeline.html** | Self-contained HTML Gantt chart with Story Points, dependencies, critical path, developer utilization |
-| **RTM** | Requirement Traceability Matrix — business requirements → FR → design solution → test case (`output/rtm/RTM.md`) |
+| **RTM** | Requirement Traceability Matrix — business requirements → FR → design solution → test case (`output/rtm/RTM.md` / `RTM_<scope>.md`) |
+| **openapi.yaml** | OpenAPI 3.0 consolidating all endpoint specs with `x-status` / `x-phase` (`output/spec/openapi.yaml`) |
 | **Gap Report** | Structured diff: FSD vs existing ERD/API + migration plan |
 | **Consistency Report** | Cross-check: ERD ↔ API spec ↔ tasks |
 | **Discovery Questions** | Structured QUESTION_FOR_BA, ASSUMPTION, CONFLICT list for ambiguous FSDs |
@@ -28,7 +29,8 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 - **Gap analysis** — Compare new FSD against existing database schema and API specs
 - **Consistency checks** — Validate alignment across ERD, API spec, and task cards
 - **Timeline estimation** — Story Points (1 SP = 4 hours), developer assignment, dependency tracking, critical path analysis, HTML Gantt chart visualization
-- **RTM generation** — Trace every business requirement to its design solution and test case, writing exactly one file to `output/rtm/RTM.md`; uncovered requirements stay as empty cells the dashboard highlights
+- **RTM generation** — Trace every business requirement to its design solution and test case. One scope = one BRD/FSD; a BRD/FSD split into multiple feature FDs (`<scope>_fd_<feature>.md`) is traced into a single `output/rtm/RTM_<scope>.md`; uncovered requirements stay as empty cells the dashboard highlights
+- **OpenAPI generation** — Consolidate `MASTER_SPEC_API.md` + `output/spec/*.md` into one `output/spec/openapi.yaml` with `x-status`/`x-phase`
 - **Discovery mode** — Structured questions for ambiguous FSDs before generating specs
 - **Auth & security** — JWT patterns, role-permission matrix, brute force protection, data protection
 - **Error catalog** — Standardized error envelope, error codes, HTTP status mapping
@@ -150,7 +152,17 @@ Trace business requirements down to design solutions and test cases after artifa
 Generate RTM dari FSD dan artifacts yang sudah ada. Output ke output/rtm/RTM.md
 ```
 
-This reads `input/fsd/*.md`, `output/spec/*.md`, `output/erd/*.md` (and `.dbml`), `output/task/*.md`, plus `MASTER_SPEC_API.md` / `MASTER_ERD.md` and produces a single `output/rtm/RTM.md` with BR → FR → DS → TC tables. Requirements with no design or test yet keep empty cells — that is the coverage gap.
+This reads `input/fsd/*.md`, `output/spec/*.md`, `output/erd/*.md` (and `.dbml`), `output/task/*.md`, plus `MASTER_SPEC_API.md` / `MASTER_ERD.md` and produces a single `output/rtm/RTM.md` (or `RTM_<scope>.md` when scoped to one BRD/FSD) with BR → FR → DS → TC tables. Requirements with no design or test yet keep empty cells — that is the coverage gap.
+
+### OpenAPI 3.0
+
+Consolidate all endpoint specs into one machine-readable file:
+
+```
+Generate openapi.yaml dari semua spec yang ada
+```
+
+Reads `MASTER_SPEC_API.md` + `output/spec/*.md` and writes a single valid `output/spec/openapi.yaml` with `summary`/`description`/`tags` per operation plus `x-status: done|in-develop` and `x-phase` where derivable.
 
 ---
 
@@ -189,8 +201,9 @@ fsd-analyzer/
 │   ├── frontend_task_format.md      # Frontend task cards (components, API integration, UI states)
 │   ├── migration_strategy.md        # DB migration plan (zero-downtime, rollback, deployment)
 │   ├── project_context_template.md  # Project context template (tech stack, conventions)
-│   └── timeline_estimation.md       # Timeline + HTML Gantt + SP + dependency + critical path
-│   └── rtm_format.md                # Requirement Traceability Matrix (BR → FR → DS → TC)
+│   ├── timeline_estimation.md       # Timeline + HTML Gantt + SP + dependency + critical path
+│   ├── rtm_format.md                # Requirement Traceability Matrix (BR → FR → DS → TC)
+│   └── openapi_format.md            # OpenAPI 3.0 consolidation (x-status / x-phase)
 ├── scripts/                         # Optional local validation (Python, stdlib only)
 │   ├── validate_erd.py              # DBML table + ref validation
 │   ├── validate_spec.py             # Spec markdown structure heuristics
@@ -241,7 +254,8 @@ flowchart TD
 7. **Timeline** — Assign developers, generate HTML Gantt chart
 8. **Gap Analysis** — Compare against existing system (if applicable)
 9. **Consistency Check** — Validate all artifacts aligned
-10. **RTM** — Trace BR → FR → DS → TC into `output/rtm/RTM.md`
+10. **RTM** — Trace BR → FR → DS → TC into `output/rtm/RTM.md` / `RTM_<scope>.md`
+11. **OpenAPI** — Consolidate specs into `output/spec/openapi.yaml`
 
 ---
 

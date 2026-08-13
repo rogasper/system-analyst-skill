@@ -73,6 +73,18 @@
       "prompt": "Generate RTM dari FSD dan artifacts yang sudah ada. Output ke output/rtm/RTM.md",
       "expected_output": "Requirement Traceability Matrix per references/rtm_format.md: exactly one file output/rtm/RTM.md with Business Requirements (BR), Design Solutions (DS), Test Cases (TC), and Functional Requirements (FR) tables. Every FR references a BR; DS/TC cells reference codes (semicolon-separated if multiple); sequential IDs; Indonesian titles/descriptions, English technical terms; empty cells left for requirements with no design or test yet.",
       "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 13,
+      "prompt": "Generate RTM untuk scope BRD01 (FD customer + product) dari input/fsd/BRD01_fd_*.md",
+      "expected_output": "Scoped RTM per references/rtm_format.md: exactly one file output/rtm/RTM_BRD01.md covering only the selected FDs (customer, product). IDs restart at BR-001/FR-001/DS-001/TC-001 for this scope; output/spec|erd|task filtered to the selected features; every FR references a BR.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 14,
+      "prompt": "Generate openapi.yaml dari semua spec yang ada",
+      "expected_output": "OpenAPI 3.0 per references/openapi_format.md: exactly one file output/spec/openapi.yaml with all endpoints merged from MASTER_SPEC_API.md + output/spec/*.md, unique paths, per-operation summary/description/tags, requestBody/parameters where mentioned, x-status (done|in-develop) and x-phase when derivable. Valid parseable YAML.",
+      "files": ["evals/sample_fsd.md"]
     }
   ],
   "scripts_smoke": [

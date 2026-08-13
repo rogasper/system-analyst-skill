@@ -1,7 +1,7 @@
 ---
 name: fsd-analyzer
-version: 1.1.0
-description: Analyze Functional Specification Documents (FSD) and produce Markdown artifacts — API specs (spec_api.md), ERD (erd.md + optional DBML for dbdiagram.io), UML diagrams (PlantUML for sequence, class, activity, state, component, use case), developer task cards (task.md) with Story Points, HTML Gantt timeline charts, and Requirement Traceability Matrix (RTM.md) tracing business requirements to design solutions and test cases. Also perform gap analysis (FSD vs existing ERD/API), cross-artifact consistency checks (ERD vs API vs tasks), and development timeline estimation with dependency tracking and critical path analysis. Use when the user provides or references an FSD, business requirements, or asks to generate/compare technical specs, find gaps vs the current database or API, validate consistency between ERD and spec, convert requirements into developer-ready documentation, estimate development timeline, assign tasks to developers, or build a traceability matrix — even without the words "FSD" or "system analyst".
+version: 1.2.0
+description: Analyze Functional Specification Documents (FSD) and produce Markdown artifacts — API specs (spec_api.md), ERD (erd.md + optional DBML for dbdiagram.io), UML diagrams (PlantUML for sequence, class, activity, state, component, use case), developer task cards (task.md) with Story Points, HTML Gantt timeline charts, Requirement Traceability Matrix (RTM.md) tracing business requirements to design solutions and test cases, and OpenAPI 3.0 (openapi.yaml). Also perform gap analysis (FSD vs existing ERD/API), cross-artifact consistency checks (ERD vs API vs tasks), and development timeline estimation with dependency tracking and critical path analysis. Use when the user provides or references an FSD, business requirements, or asks to generate/compare technical specs, find gaps vs the current database or API, validate consistency between ERD and spec, convert requirements into developer-ready documentation, estimate development timeline, assign tasks to developers, build a traceability matrix, or generate an OpenAPI spec — even without the words "FSD" or "system analyst".
 ---
 
 # FSD Analyzer (Enhanced)
@@ -27,7 +27,8 @@ Follow detailed formats in the skill's **`references/`** files:
 | [references/migration_strategy.md](references/migration_strategy.md) | **DB migration plan** — zero-downtime, rollback, deployment sequence, data migration |
 | [references/project_context_template.md](references/project_context_template.md) | **Project context** — template for tech stack, conventions, environments |
 | [references/timeline_estimation.md](references/timeline_estimation.md) | **Timeline estimation** — Story Points (1 SP = 4h), HTML Gantt chart, dependency, critical path, dev utilization |
-| [references/rtm_format.md](references/rtm_format.md) | **RTM** — Requirement Traceability Matrix (BR → FR → DS → TC) |
+| [references/rtm_format.md](references/rtm_format.md) | **RTM** — Requirement Traceability Matrix (BR → FR → DS → TC), one scope per BRD/FSD with multi-FD support |
+| [references/openapi_format.md](references/openapi_format.md) | **OpenAPI 3.0** — consolidate specs into `output/spec/openapi.yaml` with `x-status` / `x-phase` |
 
 Optional automation: Python scripts in **`scripts/`** (validate DBML, validate spec shape, extract entities from FSD, compare FSD hints vs ERD).
 
@@ -40,7 +41,8 @@ Optional automation: Python scripts in **`scripts/`** (validate DBML, validate s
 3. **Consistency check** — ERD vs API spec vs tasks → Consistency Report (see `references/consistency_check.md`).
 4. **Timeline estimation** — Task cards + developer assignments → HTML Gantt chart with Story Points, dependency tracking, critical path, developer utilization (see `references/timeline_estimation.md`).
 5. **Discovery / discussion** — Ambiguous FSD → structured questions, ASSUMPTION, QUESTION_FOR_BA (see `references/discovery_questions.md`).
-6. **RTM generation** — Trace business requirements → functional requirements → design solutions → test cases, writing exactly one file to `output/rtm/RTM.md` (see `references/rtm_format.md`).
+6. **RTM generation** — Trace business requirements → functional requirements → design solutions → test cases, writing exactly one file to `output/rtm/RTM_<scope>.md` (`RTM.md` for default). One scope = one BRD/FSD; a BRD/FSD split into multiple feature FDs (`<scope>_fd_<feature>.md`) is traced into a single RTM for that scope (see `references/rtm_format.md`).
+7. **OpenAPI generation** — Consolidate `MASTER_SPEC_API.md` + `output/spec/*.md` into one `output/spec/openapi.yaml` with `x-status`/`x-phase` (see `references/openapi_format.md`).
 
 ```mermaid
 flowchart LR
@@ -57,7 +59,9 @@ flowchart LR
   OUT1 --> TL[Timeline_estimation]
   TL --> OUT4[HTML_Gantt_chart]
   OUT1 --> RTM[RTM_generation]
-  RTM --> OUT5[output/rtm/RTM.md]
+  RTM --> OUT5[output/rtm/RTM_scope.md]
+  OUT1 --> OAS[OpenAPI_generation]
+  OAS --> OUT6[output/spec/openapi.yaml]
 ```
 
 ---
@@ -103,6 +107,8 @@ Respond using this skill when the user says things like:
 - "Generate development timeline with Gantt chart"
 - "Generate RTM dari FSD dan artifacts yang sudah ada" / "Generate a Requirement Traceability Matrix from these artifacts"
 - "Bikin traceability matrix: trace setiap requirement ke design solution dan test case"
+- "Generate RTM untuk scope BRD01 (FD customer + product) dari input/fsd/BRD01_fd_*.md"
+- "Generate openapi.yaml dari semua spec yang ada" / "Consolidate semua endpoint jadi openapi.yaml"
 
 ---
 
@@ -119,7 +125,8 @@ Respond using this skill when the user says things like:
 9. **Consistency** — Cross-check artifacts (`references/consistency_check.md`).
 10. **Auth & security** — Document auth patterns, role-permission matrix, security requirements (see `references/auth_security.md`).
 11. **Timeline estimation** — Story Points, developer assignments, dependency tracking, critical path analysis, developer utilization, auto-detect risks. Generate **self-contained HTML Gantt chart** (`references/timeline_estimation.md`).
-12. **RTM** — Build a Requirement Traceability Matrix tracing **business requirements → functional requirements → design solutions → test cases** (`references/rtm_format.md`). Write exactly one file to `output/rtm/RTM.md`; leave design/test cells empty where a requirement has no coverage yet — that gap is the deliverable's point.
+12. **RTM** — Build a Requirement Traceability Matrix tracing **business requirements → functional requirements → design solutions → test cases** (`references/rtm_format.md`). One scope = one BRD/FSD; multi-FD scope (`<scope>_fd_<feature>.md`) → one file `output/rtm/RTM_<scope>.md`. Write exactly one file; leave design/test cells empty where a requirement has no coverage yet — that gap is the deliverable's point.
+13. **OpenAPI** — Generate one valid `output/spec/openapi.yaml` merging all endpoint specs with `x-status`/`x-phase` markers (`references/openapi_format.md`).
 
 ---
 
@@ -150,7 +157,8 @@ Respond using this skill when the user says things like:
 | Tasks (backend) | `task.md`, `task_<feature>.md` |
 | Tasks (frontend) | `task_fe.md`, `task_fe_<feature>.md` |
 | Timeline HTML | `timeline_<feature>.html` |
-| RTM | `output/rtm/RTM.md` |
+| RTM | `output/rtm/RTM.md` (default) / `output/rtm/RTM_<scope>.md` (scoped) |
+| OpenAPI | `output/spec/openapi.yaml` |
 | Project context | `project_context.md` |
 
 **Markdown first:** deliver in chat and/or Write tool — user may **copy-paste** to Sheets or Monday without committing files.
@@ -175,7 +183,8 @@ Respond using this skill when the user says things like:
 - [ ] Developer utilization balanced (no one idle or overloaded without warning)
 - [ ] Critical path identified and flagged
 - [ ] Risks and warnings auto-detected and documented
-- [ ] RTM written to `output/rtm/RTM.md` only; every FR references a BR; sequential IDs; empty cells mark uncovered requirements
+- [ ] RTM written to `output/rtm/RTM.md` / `RTM_<scope>.md` only; every FR references a BR; sequential IDs restart per scope; empty cells mark uncovered requirements
+- [ ] OpenAPI (`output/spec/openapi.yaml`) valid 3.0 YAML; every endpoint has summary/description/tags + `x-status`/`x-phase` where derivable
 
 ---
 
