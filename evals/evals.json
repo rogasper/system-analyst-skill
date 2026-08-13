@@ -76,8 +76,8 @@
     },
     {
       "id": 13,
-      "prompt": "Generate RTM untuk scope BRD01_P2 (FD customer + product) dari input/fsd/BRD01_P2_*.md",
-      "expected_output": "Scoped RTM per references/rtm_format.md: exactly one file output/rtm/RTM_BRD01_P2.md covering only the selected FDs (customer, product). IDs restart at BR-001/FR-001/DS-001/TC-001 for this scope; output/spec|erd|task filtered to the selected features; every FR references a BR.",
+      "prompt": "Generate RTM untuk scope P2 dari input/fsd/fsd_cms_agency_*.md (Phase 2)",
+      "expected_output": "Scoped RTM per references/rtm_format.md: exactly one file output/rtm/RTM_P2.md covering only the selected FDs (files mentioning Phase 2). IDs restart at BR-001/FR-001/DS-001/TC-001 for this scope; output/spec|erd|task filtered to the selected features; every FR references a BR.",
       "files": ["evals/sample_fsd.md"]
     },
     {

@@ -27,7 +27,7 @@ Follow detailed formats in the skill's **`references/`** files:
 | [references/migration_strategy.md](references/migration_strategy.md) | **DB migration plan** — zero-downtime, rollback, deployment sequence, data migration |
 | [references/project_context_template.md](references/project_context_template.md) | **Project context** — template for tech stack, conventions, environments |
 | [references/timeline_estimation.md](references/timeline_estimation.md) | **Timeline estimation** — Story Points (1 SP = 4h), HTML Gantt chart, dependency, critical path, dev utilization |
-| [references/rtm_format.md](references/rtm_format.md) | **RTM** — Requirement Traceability Matrix (BR → FR → DS → TC), one scope per BRD/FSD with multi-FD support |
+| [references/rtm_format.md](references/rtm_format.md) | **RTM** — Requirement Traceability Matrix (BR → FR → DS → TC), one scope per FSD/phase with multi-FD support |
 | [references/openapi_format.md](references/openapi_format.md) | **OpenAPI 3.0** — consolidate specs into `output/spec/openapi.yaml` with `x-status` / `x-phase` |
 
 Optional automation: Python scripts in **`scripts/`** (validate DBML, validate spec shape, extract entities from FSD, compare FSD hints vs ERD).
@@ -41,7 +41,7 @@ Optional automation: Python scripts in **`scripts/`** (validate DBML, validate s
 3. **Consistency check** — ERD vs API spec vs tasks → Consistency Report (see `references/consistency_check.md`).
 4. **Timeline estimation** — Task cards + developer assignments → HTML Gantt chart with Story Points, dependency tracking, critical path, developer utilization (see `references/timeline_estimation.md`).
 5. **Discovery / discussion** — Ambiguous FSD → structured questions, ASSUMPTION, QUESTION_FOR_BA (see `references/discovery_questions.md`).
-6. **RTM generation** — Trace business requirements → functional requirements → design solutions → test cases, writing exactly one file to `output/rtm/RTM_<scope>.md` (`RTM.md` for default). One scope = one BRD + phase; a BRD split into multiple feature FDs (`<BRD>_<phase>_<feature>.md`) is traced into a single RTM for that scope (see `references/rtm_format.md`).
+6. **RTM generation** — Trace business requirements → functional requirements → design solutions → test cases, writing exactly one file to `output/rtm/RTM_<scope>.md` (`RTM.md` for default). One scope = one FSD/phase; files that mention the same phase in content (e.g. "Phase 2") form one scope (`P2`) and are traced together via the selected FD list (see `references/rtm_format.md`).
 7. **OpenAPI generation** — Consolidate `MASTER_SPEC_API.md` + `output/spec/*.md` into one `output/spec/openapi.yaml` with `x-status`/`x-phase` (see `references/openapi_format.md`).
 
 ```mermaid
@@ -107,7 +107,7 @@ Respond using this skill when the user says things like:
 - "Generate development timeline with Gantt chart"
 - "Generate RTM dari FSD dan artifacts yang sudah ada" / "Generate a Requirement Traceability Matrix from these artifacts"
 - "Bikin traceability matrix: trace setiap requirement ke design solution dan test case"
-- "Generate RTM untuk scope BRD01_P2 (FD customer + product) dari input/fsd/BRD01_P2_*.md"
+- "Generate RTM untuk scope P2 dari input/fsd/fsd_cms_agency_*.md (Phase 2)"
 - "Generate openapi.yaml dari semua spec yang ada" / "Consolidate semua endpoint jadi openapi.yaml"
 
 ---
@@ -125,7 +125,7 @@ Respond using this skill when the user says things like:
 9. **Consistency** — Cross-check artifacts (`references/consistency_check.md`).
 10. **Auth & security** — Document auth patterns, role-permission matrix, security requirements (see `references/auth_security.md`).
 11. **Timeline estimation** — Story Points, developer assignments, dependency tracking, critical path analysis, developer utilization, auto-detect risks. Generate **self-contained HTML Gantt chart** (`references/timeline_estimation.md`).
-12. **RTM** — Build a Requirement Traceability Matrix tracing **business requirements → functional requirements → design solutions → test cases** (`references/rtm_format.md`). One scope = one BRD + phase; multi-FD scope (`<BRD>_<phase>_<feature>.md`) → one file `output/rtm/RTM_<scope>.md`. Write exactly one file; leave design/test cells empty where a requirement has no coverage yet — that gap is the deliverable's point.
+12. **RTM** — Build a Requirement Traceability Matrix tracing **business requirements → functional requirements → design solutions → test cases** (`references/rtm_format.md`). One scope = one FSD/phase; files mentioning the same phase (content) form one scope (`P2`) → one file `output/rtm/RTM_<scope>.md`. Write exactly one file; leave design/test cells empty where a requirement has no coverage yet — that gap is the deliverable's point.
 13. **OpenAPI** — Generate one valid `output/spec/openapi.yaml` merging all endpoint specs with `x-status`/`x-phase` markers (`references/openapi_format.md`).
 
 ---
