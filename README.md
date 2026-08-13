@@ -29,7 +29,7 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 - **Gap analysis** — Compare new FSD against existing database schema and API specs
 - **Consistency checks** — Validate alignment across ERD, API spec, and task cards
 - **Timeline estimation** — Story Points (1 SP = 4 hours), developer assignment, dependency tracking, critical path analysis, HTML Gantt chart visualization
-- **RTM generation** — Trace every business requirement to its design solution and test case. One scope = one BRD/FSD; a BRD/FSD split into multiple feature FDs (`<scope>_fd_<feature>.md`) is traced into a single `output/rtm/RTM_<scope>.md`; uncovered requirements stay as empty cells the dashboard highlights
+- **RTM generation** — Trace every business requirement to its design solution and test case. One scope = one BRD + phase; a BRD split into multiple feature FDs (`<BRD>_<phase>_<feature>.md`) is traced into a single `output/rtm/RTM_<scope>.md`; uncovered requirements stay as empty cells the dashboard highlights
 - **OpenAPI generation** — Consolidate `MASTER_SPEC_API.md` + `output/spec/*.md` into one `output/spec/openapi.yaml` with `x-status`/`x-phase`
 - **Discovery mode** — Structured questions for ambiguous FSDs before generating specs
 - **Auth & security** — JWT patterns, role-permission matrix, brute force protection, data protection

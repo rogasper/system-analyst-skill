@@ -2,11 +2,11 @@
 
 Run **RTM generation** when the user asks to trace **business requirements** down to the technical side (design solution + test case), e.g. "Generate RTM", "bikin traceability matrix", "trace requirement ke design dan test case".
 
-## Scope (one BRD/FSD)
+## Scope (one BRD + phase)
 
-A scope is **one BRD/FSD** document that may be split into several feature documents (**FDs**) to keep files small:
+A scope is **one BRD document + one phase**, which may be split into several feature documents (**FDs**) to keep files small:
 
-- Convention: `input/fsd/<scope>_fd_<feature>.md` — files sharing the same `<scope>` prefix belong to one BRD/FSD scope (e.g. `BRD01_fd_customer.md`, `BRD01_fd_product.md` → scope `BRD01`).
+- Convention: `input/fsd/<BRD>_<phase>_<feature>.md` — files sharing the same `<BRD>_<phase>` prefix belong to one scope (e.g. `BRD01_P2_customer.md`, `BRD01_P2_product.md` → scope `BRD01_P2`; `BRD01_P3_*` → a different scope `BRD01_P3`).
 - The prompt tells you the scope name and the **selected FD list**. Trace only those FDs into one RTM for the scope.
 - Default (no scope): one RTM covering all FSD/FD documents.
 
@@ -14,7 +14,7 @@ A scope is **one BRD/FSD** document that may be split into several feature docum
 
 Read artifacts from the project root (no need to @-mention them):
 
-1. **`input/fsd/*.md`** — the FSD(s) for the active scope. When scoped, read ONLY the selected FD files (`<scope>_fd_<feature>.md`), not every FSD.
+1. **`input/fsd/*.md`** — the FSD(s) for the active scope. When scoped, read ONLY the selected FD files (`<BRD>_<phase>_<feature>.md`), not every FSD.
 2. **`output/spec/*.md`** — generated API specs (design solutions). When scoped, prefer the files matching the selected features.
 3. **`output/erd/*.md` / `.dbml`** — generated ERD (design solutions). Same scoped filtering.
 4. **`output/task/*.md`** — generated task cards (design solutions + test case hints). Same scoped filtering.
@@ -27,7 +27,7 @@ Respect a total prompt budget (~48KB): read up to ~8 files per folder, cap each 
 Write **EXACTLY ONE file**:
 
 - Default scope → **`output/rtm/RTM.md`**
-- Scoped (e.g. scope `BRD01`) → **`output/rtm/RTM_BRD01.md`**
+- Scoped (e.g. scope `BRD01_P2`) → **`output/rtm/RTM_BRD01_P2.md`**
 
 The dashboard watches these paths and auto-refreshes after you finish.
 
@@ -66,4 +66,4 @@ Indonesian for titles/descriptions, English for technical terms. Use this exact 
 - Use sequential IDs: BR-001, FR-001, DS-001, TC-001, ... (restart per scope/RTM file).
 - Each FR should be traced to **at least one design solution**; add test cases where derivable from the artifacts.
 - If a requirement has no design or no test yet, **leave the cell empty** — that gap is what the dashboard highlights.
-- Write ONLY the scoped RTM file (e.g. `output/rtm/RTM_BRD01.md`). Do NOT modify any other file.
+- Write ONLY the scoped RTM file (e.g. `output/rtm/RTM_BRD01_P2.md`). Do NOT modify any other file.
