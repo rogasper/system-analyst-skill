@@ -1,6 +1,6 @@
 # FSD Analyzer
 
-Transform **Functional Specification Documents (FSD)** into **Markdown-first** technical artifacts — API specs, ERD schemas, UML diagrams, developer task cards, and HTML Gantt timeline charts — using AI-powered coding assistants like Cursor, Claude Code, OpenCode, or any agent that supports custom skills.
+Transform **Functional Specification Documents (FSD)** into **Markdown-first** technical artifacts — API specs, ERD schemas, UML diagrams, developer task cards, HTML Gantt timeline charts, and a Requirement Traceability Matrix — using AI-powered coding assistants like Cursor, Claude Code, OpenCode, or any agent that supports custom skills.
 
 ## What It Does
 
@@ -14,6 +14,7 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 | **task.md** | Developer task cards with Story Points, dependencies, critical path (copy to Monday, Jira, Confluence) |
 | **task_fe.md** | Frontend task cards (component breakdown, API integration, UI states, acceptance criteria) |
 | **timeline.html** | Self-contained HTML Gantt chart with Story Points, dependencies, critical path, developer utilization |
+| **RTM** | Requirement Traceability Matrix — business requirements → FR → design solution → test case (`output/rtm/RTM.md`) |
 | **Gap Report** | Structured diff: FSD vs existing ERD/API + migration plan |
 | **Consistency Report** | Cross-check: ERD ↔ API spec ↔ tasks |
 | **Discovery Questions** | Structured QUESTION_FOR_BA, ASSUMPTION, CONFLICT list for ambiguous FSDs |
@@ -27,6 +28,7 @@ FSD Analyzer is a **skill/plugin** for AI coding assistants that acts as a Senio
 - **Gap analysis** — Compare new FSD against existing database schema and API specs
 - **Consistency checks** — Validate alignment across ERD, API spec, and task cards
 - **Timeline estimation** — Story Points (1 SP = 4 hours), developer assignment, dependency tracking, critical path analysis, HTML Gantt chart visualization
+- **RTM generation** — Trace every business requirement to its design solution and test case, writing exactly one file to `output/rtm/RTM.md`; uncovered requirements stay as empty cells the dashboard highlights
 - **Discovery mode** — Structured questions for ambiguous FSDs before generating specs
 - **Auth & security** — JWT patterns, role-permission matrix, brute force protection, data protection
 - **Error catalog** — Standardized error envelope, error codes, HTTP status mapping
@@ -140,6 +142,16 @@ This generates:
 @MASTER_ERD.md @MASTER_SPEC_API.md @fsd_section_3.md — merge changes into master
 ```
 
+### Requirement Traceability Matrix
+
+Trace business requirements down to design solutions and test cases after artifacts exist:
+
+```
+Generate RTM dari FSD dan artifacts yang sudah ada. Output ke output/rtm/RTM.md
+```
+
+This reads `input/fsd/*.md`, `output/spec/*.md`, `output/erd/*.md` (and `.dbml`), `output/task/*.md`, plus `MASTER_SPEC_API.md` / `MASTER_ERD.md` and produces a single `output/rtm/RTM.md` with BR → FR → DS → TC tables. Requirements with no design or test yet keep empty cells — that is the coverage gap.
+
 ---
 
 ## Story Points
@@ -178,6 +190,7 @@ fsd-analyzer/
 │   ├── migration_strategy.md        # DB migration plan (zero-downtime, rollback, deployment)
 │   ├── project_context_template.md  # Project context template (tech stack, conventions)
 │   └── timeline_estimation.md       # Timeline + HTML Gantt + SP + dependency + critical path
+│   └── rtm_format.md                # Requirement Traceability Matrix (BR → FR → DS → TC)
 ├── scripts/                         # Optional local validation (Python, stdlib only)
 │   ├── validate_erd.py              # DBML table + ref validation
 │   ├── validate_spec.py             # Spec markdown structure heuristics
@@ -209,6 +222,9 @@ flowchart TD
     SPEC --> TASKS[Task Cards<br/>SP + Dependencies]
     TASKS --> FE_TASKS[FE Task Cards]
     TASKS --> TIMELINE[Timeline HTML<br/>Gantt Chart]
+    SPEC --> RTM[RTM<br/>output/rtm/RTM.md]
+    ERD --> RTM
+    TASKS --> RTM
     ERD --> GAP[Gap Analysis<br/>vs existing artifacts]
     GAP --> MIGRATION[Migration Plan]
     SPEC --> CONSISTENCY[Consistency Check]
@@ -225,6 +241,7 @@ flowchart TD
 7. **Timeline** — Assign developers, generate HTML Gantt chart
 8. **Gap Analysis** — Compare against existing system (if applicable)
 9. **Consistency Check** — Validate all artifacts aligned
+10. **RTM** — Trace BR → FR → DS → TC into `output/rtm/RTM.md`
 
 ---
 

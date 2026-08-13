@@ -1,6 +1,6 @@
 {
   "skill_name": "fsd-analyzer",
-  "version": "3",
+  "version": "4",
   "evals": [
     {
       "id": 1,
@@ -66,6 +66,12 @@
       "id": 11,
       "prompt": "Tolong buat migration plan untuk perubahan database yang ditemukan dari gap analysis FSD ini vs existing ERD.",
       "expected_output": "Migration plan per references/migration_strategy.md: severity classification per change (safe/moderate/dangerous), zero-downtime phase approach, data migration scripts with SQL, rollback plan with triggers, deployment sequence with owners and verification steps. Error codes for auth failures per references/error_catalog.md.",
+      "files": ["evals/sample_fsd.md"]
+    },
+    {
+      "id": 12,
+      "prompt": "Generate RTM dari FSD dan artifacts yang sudah ada. Output ke output/rtm/RTM.md",
+      "expected_output": "Requirement Traceability Matrix per references/rtm_format.md: exactly one file output/rtm/RTM.md with Business Requirements (BR), Design Solutions (DS), Test Cases (TC), and Functional Requirements (FR) tables. Every FR references a BR; DS/TC cells reference codes (semicolon-separated if multiple); sequential IDs; Indonesian titles/descriptions, English technical terms; empty cells left for requirements with no design or test yet.",
       "files": ["evals/sample_fsd.md"]
     }
   ],
