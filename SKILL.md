@@ -41,7 +41,7 @@ Optional automation: Python scripts in **`scripts/`** (validate DBML, validate s
 3. **Consistency check** — ERD vs API spec vs tasks → Consistency Report (see `references/consistency_check.md`).
 4. **Timeline estimation** — Task cards + developer assignments → HTML Gantt chart with Story Points, dependency tracking, critical path, developer utilization (see `references/timeline_estimation.md`).
 5. **Discovery / discussion** — Ambiguous FSD → structured questions, ASSUMPTION, QUESTION_FOR_BA (see `references/discovery_questions.md`).
-6. **RTM generation** — Trace business requirements → functional requirements → design solutions → test cases, writing exactly one file to `output/rtm/RTM_<scope>.md` (`RTM.md` for default). One scope = one FSD/phase; files that mention the same phase in content (e.g. "Phase 2") form one scope (`P2`) and are traced together via the selected FD list (see `references/rtm_format.md`).
+6. **RTM generation** — Trace business requirements → functional requirements → design solutions → test cases, writing exactly one file to `output/rtm/RTM_<scope>.md` (`RTM.md` for default). One scope = one RTM; the user picks the scope name and which FSD files (FDs) to trace — a single FSD split into several files is traced together into that scope's RTM (see `references/rtm_format.md`).
 7. **OpenAPI generation** — Consolidate `MASTER_SPEC_API.md` + `output/spec/*.md` into one `output/spec/openapi.yaml` with `x-status`/`x-phase` (see `references/openapi_format.md`).
 
 ```mermaid
@@ -107,7 +107,7 @@ Respond using this skill when the user says things like:
 - "Generate development timeline with Gantt chart"
 - "Generate RTM dari FSD dan artifacts yang sudah ada" / "Generate a Requirement Traceability Matrix from these artifacts"
 - "Bikin traceability matrix: trace setiap requirement ke design solution dan test case"
-- "Generate RTM untuk scope P2 dari input/fsd/fsd_cms_agency_*.md (Phase 2)"
+- "Generate RTM untuk scope P2 dari file-file FSD yang dipilih (mis. fsd_cms_agency_tsl_management.md, fsd_cms_agency_tsl_dashboard.md)"
 - "Generate openapi.yaml dari semua spec yang ada" / "Consolidate semua endpoint jadi openapi.yaml"
 
 ---
@@ -125,7 +125,7 @@ Respond using this skill when the user says things like:
 9. **Consistency** — Cross-check artifacts (`references/consistency_check.md`).
 10. **Auth & security** — Document auth patterns, role-permission matrix, security requirements (see `references/auth_security.md`).
 11. **Timeline estimation** — Story Points, developer assignments, dependency tracking, critical path analysis, developer utilization, auto-detect risks. Generate **self-contained HTML Gantt chart** (`references/timeline_estimation.md`).
-12. **RTM** — Build a Requirement Traceability Matrix tracing **business requirements → functional requirements → design solutions → test cases** (`references/rtm_format.md`). One scope = one FSD/phase; files mentioning the same phase (content) form one scope (`P2`) → one file `output/rtm/RTM_<scope>.md`. Write exactly one file; leave design/test cells empty where a requirement has no coverage yet — that gap is the deliverable's point.
+12. **RTM** — Build a Requirement Traceability Matrix tracing **business requirements → functional requirements → design solutions → test cases** (`references/rtm_format.md`). One scope = one RTM; scope name + selected FSD files come from the prompt → one file `output/rtm/RTM_<scope>.md`. Write exactly one file; leave design/test cells empty where a requirement has no coverage yet — that gap is the deliverable's point.
 13. **OpenAPI** — Generate one valid `output/spec/openapi.yaml` merging all endpoint specs with `x-status`/`x-phase` markers (`references/openapi_format.md`).
 
 ---

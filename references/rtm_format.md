@@ -2,13 +2,12 @@
 
 Run **RTM generation** when the user asks to trace **business requirements** down to the technical side (design solution + test case), e.g. "Generate RTM", "bikin traceability matrix", "trace requirement ke design dan test case".
 
-## Scope (one FSD/phase, multi-FD)
+## Scope (one RTM, multi-FD)
 
-A scope is **one FSD for one phase**, which may be split into several feature files (FDs) to keep files small. Scope is derived from the **phase mentioned in the file content** (first "Phase N"/"Fase N" → scope `PN`):
+A scope is one RTM (default → `RTM.md`, or a named scope → `RTM_<name>.md`). One FSD/BRD may be split into several feature files (FDs) to keep files small; the scope name is decided by the user (e.g. `P2`, `BRD01`, `Phase 3` — not inferred):
 
-- Files that mention the same phase belong to one scope, e.g. `fsd_cms_agency_email_management.md`, `fsd_cms_agency_tsl_dashboard.md`, ... (all "Phase 2") → scope `P2`.
-- The prompt tells you the scope name (e.g. `P2`) and the **selected FD list** (the files to trace). Trace only those FDs into one RTM for the scope.
-- Files without a phase mention are treated as their own scope.
+- The prompt tells you the **scope name** and the **selected FD list** (the files to trace). Trace only those FDs into one RTM for the scope.
+- No FDs listed = trace all FSD/FD documents in `input/fsd/`.
 - Default (no scope): one RTM covering all FSD/FD documents.
 
 ## Inputs
@@ -28,7 +27,7 @@ Respect a total prompt budget (~48KB): read up to ~8 files per folder, cap each 
 Write **EXACTLY ONE file**:
 
 - Default scope → **`output/rtm/RTM.md`**
-- Scoped (e.g. scope `P2`) → **`output/rtm/RTM_P2.md`**
+- Scoped (e.g. scope `P2`) → **`output/rtm/RTM_P2.md`** (scope name is whatever the prompt says)
 
 The dashboard watches these paths and auto-refreshes after you finish.
 
